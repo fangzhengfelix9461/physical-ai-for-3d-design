@@ -59,7 +59,7 @@
   <div class="viewer">
     <header>
       <h1>Physical AI for 3D design</h1>
-      <nav class="downloads" aria-label="Presentation downloads"><a class="download" href="physical-ai-for-3d-design.html?v=46567a21ffe6" download="physical-ai-for-3d-design.html">Download HTML</a><a class="download" href="physical-ai-for-3d-design.pptx?v=46567a21ffe6" download="physical-ai-for-3d-design.pptx">Download PowerPoint</a></nav>
+      <nav class="downloads" aria-label="Presentation downloads"><a class="download" href="physical-ai-for-3d-design.html?v=2da15a2a23be" download="physical-ai-for-3d-design.html">Download HTML</a><a class="download" href="physical-ai-for-3d-design.pptx?v=46567a21ffe6" download="physical-ai-for-3d-design.pptx">Download PowerPoint</a></nav>
     </header>
     <main aria-label="Presentation slide">
       <div class="screen" aria-busy="true">
@@ -168,6 +168,11 @@
     retry.addEventListener('click', loadSlide);
     window.addEventListener('hashchange', syncHash);
     window.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && document.fullscreenElement) {
+        event.preventDefault();
+        document.exitFullscreen().catch(() => {});
+        return;
+      }
       if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
       const targets = { ArrowLeft: current - 1, ArrowRight: current + 1, Home: 1, End: titles.length };
       if (Object.hasOwn(targets, event.key)) {

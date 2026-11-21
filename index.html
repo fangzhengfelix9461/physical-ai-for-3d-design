@@ -14,6 +14,7 @@
     header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     h1 { margin: 0; font-size: 17px; line-height: 1.4; font-weight: 600; }
     a { color: #d4e5ff; text-underline-offset: 4px; }
+    .downloads { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
     .download { font-size: 14px; white-space: nowrap; }
     main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 24px; }
     .screen { position: relative; width: min(100%, calc((100svh - 184px) * 16 / 9)); aspect-ratio: 16 / 9; background: #fff; overflow: hidden; box-shadow: 0 12px 48px #0005; }
@@ -58,7 +59,7 @@
   <div class="viewer">
     <header>
       <h1>Physical AI for 3D design</h1>
-      <a class="download" href="physical-ai-for-3d-design.pptx" download>Download PowerPoint</a>
+      <nav class="downloads" aria-label="Presentation downloads"><a class="download" href="physical-ai-for-3d-design.html?v=46567a21ffe6" download="physical-ai-for-3d-design.html">Download HTML</a><a class="download" href="physical-ai-for-3d-design.pptx?v=46567a21ffe6" download="physical-ai-for-3d-design.pptx">Download PowerPoint</a></nav>
     </header>
     <main aria-label="Presentation slide">
       <div class="screen" aria-busy="true">
@@ -83,7 +84,7 @@
     </footer>
     <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
     <p id="action-status" role="status" hidden></p>
-    <noscript><p style="padding:16px">Enable JavaScript to view this presentation, or <a href="physical-ai-for-3d-design.pptx">download the PowerPoint</a>.</p></noscript>
+    <noscript><p style="padding:16px">Enable JavaScript to view this presentation, or <a href="physical-ai-for-3d-design.pptx?v=46567a21ffe6">download the PowerPoint</a>.</p></noscript>
   </div>
   <script>
     'use strict';
@@ -121,7 +122,7 @@
     function loadSlide() {
       const token = ++request;
       const number = current;
-      const source = `slides/${String(number).padStart(2, '0')}.png`;
+      const source = `slides/${String(number).padStart(2, '0')}.png?v=46567a21ffe6`;
       const title = titles[number - 1];
       document.getElementById('slide-title').textContent = title;
       document.getElementById('count').textContent = `${number} / ${titles.length}`;

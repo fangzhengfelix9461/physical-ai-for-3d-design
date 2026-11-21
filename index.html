@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Physical AI for 3D design — Presentation</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #edf0f5; background: #101318; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100svh; }
+    .viewer { width: 100%; min-height: 100svh; display: flex; flex-direction: column; }
+    header, footer { padding: 16px 24px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    h1 { margin: 0; font-size: 17px; line-height: 1.4; font-weight: 600; }
+    a { color: #d4e5ff; text-underline-offset: 4px; }
+    .download { font-size: 14px; white-space: nowrap; }
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 24px; }
+    .screen { position: relative; width: min(100%, calc((100svh - 184px) * 16 / 9)); aspect-ratio: 16 / 9; background: #fff; overflow: hidden; box-shadow: 0 12px 48px #0005; }
+    .screen img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .screen img.pending { visibility: hidden; }
+    .notice { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; padding: 24px; color: #243244; text-align: center; background: #f5f7fa; }
+    .notice p { margin: 0; max-width: 48ch; line-height: 1.6; }
+    [hidden] { display: none !important; }
+    footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; }
+    .caption { min-width: 0; flex: 1 1 300px; }
+    .slide-title { font-size: 14px; line-height: 1.45; margin: 0; }
+    .help { color: #a2aebe; font-size: 12px; line-height: 1.5; margin: 5px 0 0; }
+    .controls { display: flex; align-items: center; gap: 10px; }
+    button { font: inherit; font-size: 14px; min-height: 42px; padding: 8px 14px; border: 1px solid #526176; border-radius: 5px; color: #f5f7fa; background: #202833; cursor: pointer; }
+    button:hover:not(:disabled) { background: #303e50; }
+    button:disabled { opacity: .4; cursor: default; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #91c2ff; outline-offset: 4px; }
+    .count { font-size: 14px; min-width: 46px; text-align: center; font-variant-numeric: tabular-nums; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    #action-status { margin: 0; padding: 0 24px 8px; font-size: 13px; color: #ffd7a2; }
+    @media (max-width: 640px) {
+      header, footer { padding: 14px 16px; }
+      header { align-items: flex-start; flex-direction: column; gap: 8px; }
+      main { padding: 0; flex: 0; }
+      .screen { width: 100%; }
+      footer { align-items: flex-start; }
+      .caption { flex-basis: 100%; }
+      .controls { width: 100%; justify-content: space-between; gap: 6px; }
+      button { padding-inline: 12px; }
+    }
+    @media print {
+      :root, body { background: #fff; }
+      .viewer { min-height: 0; }
+      header, footer, #action-status, noscript { display: none; }
+      main { display: block; padding: 0; }
+      .screen { width: 100%; box-shadow: none; break-inside: avoid; }
+      @page { size: landscape; margin: 8mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewer">
+    <header>
+      <h1>Physical AI for 3D design</h1>
+      <a class="download" href="physical-ai-for-3d-design.pptx" download>Download PowerPoint</a>
+    </header>
+    <main aria-label="Presentation slide">
+      <div class="screen" aria-busy="true">
+        <img id="slide" class="pending" width="1600" height="900" alt="Slide 1 of 12: Physical AI for 3D design">
+        <div id="notice" class="notice" role="status" aria-live="polite">
+          <p id="notice-text">Loading slide 1…</p>
+          <button id="retry" hidden>Retry loading slide</button>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="caption">
+        <p id="slide-title" class="slide-title">Physical AI for 3D design</p>
+        <p class="help" id="keyboard-help">Use ← / → to navigate · Home / End to jump · Esc to leave full screen</p>
+      </div>
+      <nav class="controls" aria-label="Slide navigation" aria-describedby="keyboard-help">
+        <button id="previous" aria-label="Previous slide" disabled>Previous</button>
+        <span id="count" class="count" aria-hidden="true">1 / 12</span>
+        <button id="next" aria-label="Next slide">Next</button>
+        <button id="fullscreen" aria-label="Enter full screen">Full screen</button>
+      </nav>
+    </footer>
+    <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+    <p id="action-status" role="status" hidden></p>
+    <noscript><p style="padding:16px">Enable JavaScript to view this presentation, or <a href="physical-ai-for-3d-design.pptx">download the PowerPoint</a>.</p></noscript>
+  </div>
+  <script>
+    'use strict';
+    const titles = [
+      'Physical AI for 3D design',
+      'From geometry to physical response',
+      'Related work and research position',
+      'Research questions and hypotheses',
+      'Research plan',
+      'Tasks and benchmark construction',
+      'Evaluation and experiments',
+      'Dynamic loading',
+      'Simulation data and post-training',
+      'Autonomous experiment selection and continual updates',
+      'Expected outcomes and potential contributions',
+      'Research schedule and milestones'
+    ];
+    const slide = document.getElementById('slide');
+    const screen = document.querySelector('.screen');
+    const notice = document.getElementById('notice');
+    const noticeText = document.getElementById('notice-text');
+    const retry = document.getElementById('retry');
+    const previous = document.getElementById('previous');
+    const next = document.getElementById('next');
+    const fullscreen = document.getElementById('fullscreen');
+    const actionStatus = document.getElementById('action-status');
+    let current = 1;
+    let request = 0;
+
+    function readHash() {
+      const match = /^#slide-(\d+)$/.exec(location.hash);
+      return match && Number(match[1]) >= 1 && Number(match[1]) <= titles.length ? Number(match[1]) : 1;
+    }
+
+    function loadSlide() {
+      const token = ++request;
+      const number = current;
+      const source = `slides/${String(number).padStart(2, '0')}.png`;
+      const title = titles[number - 1];
+      document.getElementById('slide-title').textContent = title;
+      document.getElementById('count').textContent = `${number} / ${titles.length}`;
+      document.getElementById('announcement').textContent = `Slide ${number} of ${titles.length}: ${title}`;
+      document.title = `${title} — Physical AI for 3D design`;
+      previous.disabled = number === 1;
+      next.disabled = number === titles.length;
+      slide.classList.add('pending');
+      slide.alt = `Slide ${number} of ${titles.length}: ${title}`;
+      screen.setAttribute('aria-busy', 'true');
+      notice.hidden = false;
+      retry.hidden = true;
+      noticeText.textContent = `Loading slide ${number}…`;
+      // Each request owns its callbacks, so a late response cannot replace a newer slide.
+      const incoming = new Image();
+      incoming.onload = () => {
+        if (token !== request) return;
+        slide.src = source;
+        slide.classList.remove('pending');
+        notice.hidden = true;
+        screen.setAttribute('aria-busy', 'false');
+      };
+      incoming.onerror = () => {
+        if (token !== request) return;
+        screen.setAttribute('aria-busy', 'false');
+        noticeText.textContent = `Slide ${number} could not be loaded. Check your connection and retry, or use the PowerPoint download above.`;
+        retry.hidden = false;
+      };
+      incoming.src = source;
+    }
+
+    function navigate(number) {
+      const target = Math.max(1, Math.min(titles.length, number));
+      if (target !== current) location.hash = `slide-${target}`;
+    }
+
+    function syncHash() {
+      current = readHash();
+      loadSlide();
+    }
+    previous.addEventListener('click', () => navigate(current - 1));
+    next.addEventListener('click', () => navigate(current + 1));
+    retry.addEventListener('click', loadSlide);
+    window.addEventListener('hashchange', syncHash);
+    window.addEventListener('keydown', event => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const targets = { ArrowLeft: current - 1, ArrowRight: current + 1, Home: 1, End: titles.length };
+      if (Object.hasOwn(targets, event.key)) {
+        event.preventDefault();
+        navigate(targets[event.key]);
+      }
+    });
+    fullscreen.hidden = !document.fullscreenEnabled;
+    fullscreen.addEventListener('click', async () => {
+      actionStatus.hidden = true;
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else await document.documentElement.requestFullscreen();
+      } catch {
+        actionStatus.textContent = 'Full screen is unavailable. You can continue in this window.';
+        actionStatus.hidden = false;
+      }
+    });
+    document.addEventListener('fullscreenchange', () => {
+      const active = !!document.fullscreenElement;
+      fullscreen.textContent = active ? 'Exit full screen' : 'Full screen';
+      fullscreen.setAttribute('aria-label', active ? 'Exit full screen' : 'Enter full screen');
+    });
+    syncHash();
+  </script>
+</body>
+</html>
